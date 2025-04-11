@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -91,6 +92,7 @@ public class JWTUtil {
     public String createJwt(String category, String username, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("jti", UUID.randomUUID().toString())
                 .claim("category", category)
                 .claim("username", username)
                 .issuedAt(new Date(System.currentTimeMillis()))

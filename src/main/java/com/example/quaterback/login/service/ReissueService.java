@@ -24,16 +24,13 @@ public class ReissueService {
     }
 
     public String validateRefresh(Cookie[] cookies) {
-        // refresh 토큰 추출
         String refreshToken = CookieUtil.extractRefreshToken(cookies);
 
-        // null, 유효성 (만료 여부 등), refreshToken인지 확인
         if (!jwtUtil.isValidateRefreshToken(refreshToken)) {
 
             throw new RuntimeException("invalid token");
         }
 
-        // DB에 저장되어 있는지 확인. 추후에 db말고 redis로 변경 가능
         Boolean isExist = refreshRepository.existsByRefresh(refreshToken);
         if (!isExist) {
 

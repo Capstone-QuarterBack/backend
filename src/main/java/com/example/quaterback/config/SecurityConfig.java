@@ -47,7 +47,7 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         //인가 설정
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "join", "reissue").permitAll()
+                .requestMatchers("/login", "/join", "/reissue").permitAll()
                 .anyRequest().authenticated());
         //필터 등록
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, reissueService), UsernamePasswordAuthenticationFilter.class);
