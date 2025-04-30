@@ -33,7 +33,7 @@ public class BootNotificationHandler implements OcppMessageHandler {
         log.info("BootNotification reason - {}", reason);
 
         if (reason.equals("PowerUp")) {
-            String stationId = bootNotificationService.updateStationStatus(jsonNode);
+            String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
             //반환 메시지 전송
         }
     }

@@ -34,7 +34,7 @@ public class StatusNotificationHandler implements OcppMessageHandler {
         String status = payload.path("connectorStatus").asText();
         log.info("StatusNotification - {} {} {}", stationId, evseId, status);
 
-        Integer resultEvseId = statusNotificationService.chargerStatusUpdated(jsonNode);
+        Integer resultEvseId = statusNotificationService.chargerStatusUpdated(jsonNode, session.getId());
         log.info("updated {}", resultEvseId);
         //반환 메시지 전송
     }
