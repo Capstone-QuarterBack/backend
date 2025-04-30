@@ -1,10 +1,12 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.mapping.repository.MappingSessionIdWithStationIdRepository;
 import com.example.quaterback.station.constant.StationStatus;
 import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
+import com.example.quaterback.websocket.mapping.FakeMappingRepository;
 import com.example.quaterback.websocket.station.repository.FakeChargingStationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +21,14 @@ class BootNotificationServiceTest {
     private BootNotificationService bootNotificationService;
     private BootNotificationConverter converter;
     private FakeChargingStationRepository repository;
+    private MappingSessionIdWithStationIdRepository mappingRepository;
 
     @BeforeEach
     void setUp() {
         converter = new BootNotificationConverter();
         repository = new FakeChargingStationRepository();
-        bootNotificationService = new BootNotificationService(repository, converter);
+        mappingRepository = new FakeMappingRepository();
+        bootNotificationService = new BootNotificationService(repository, converter, mappingRepository);
     }
 
     @Test
@@ -52,9 +56,10 @@ class BootNotificationServiceTest {
         );
         LocalDateTime before = entity.getUpdateStatusTimeStamp();
         repository.initializeStorage(entity);
+        String sessionId = "123";
 
         //when
-        String result = bootNotificationService.updateStationStatus(jsonNode);
+        String result = bootNotificationService.updateStationStatus(jsonNode, sessionId);
 
         //then
         String stationId = entity.getStationId();

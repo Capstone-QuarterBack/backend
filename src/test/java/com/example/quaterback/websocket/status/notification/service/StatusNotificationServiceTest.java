@@ -3,6 +3,7 @@ package com.example.quaterback.websocket.status.notification.service;
 import com.example.quaterback.charger.constant.ChargerStatus;
 import com.example.quaterback.charger.domain.ChargerDomain;
 import com.example.quaterback.websocket.charger.repository.FakeChargerRepository;
+import com.example.quaterback.websocket.mapping.FakeMappingRepository;
 import com.example.quaterback.websocket.status.notification.converter.StatusNotificationConverter;
 import com.example.quaterback.websocket.status.notification.fixture.StatusNotificationFixture;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,12 +19,14 @@ class StatusNotificationServiceTest {
     private StatusNotificationService statusNotificationService;
     private StatusNotificationConverter converter;
     private FakeChargerRepository repository;
+    private FakeMappingRepository mappingRepository;
 
     @BeforeEach
     void setUp() {
         repository = new FakeChargerRepository();
         converter = new StatusNotificationConverter();
-        statusNotificationService = new StatusNotificationService(repository, converter);
+        mappingRepository = new FakeMappingRepository();
+        statusNotificationService = new StatusNotificationService(repository, converter, mappingRepository);
     }
 
     @Test
@@ -49,9 +52,10 @@ class StatusNotificationServiceTest {
                 ChargerStatus.AVAILABLE,
                 before
         );
+        String sessionId = "123";
 
         //when
-        Integer result = statusNotificationService.chargerStatusUpdated(jsonNode);
+        Integer result = statusNotificationService.chargerStatusUpdated(jsonNode, sessionId);
 
         //then
         assertThat(result).isEqualTo(evseId);
