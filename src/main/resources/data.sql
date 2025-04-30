@@ -3,3 +3,5 @@ INSERT INTO charging_station (station_id, model, vendor_id, latitude, longitude,
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id) VALUES (1, "Available", "2025-04-20T12:30:00", "station-001");
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id) VALUES (2, "Available", "2025-04-20T12:30:00", "station-001");
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id) VALUES (3, "Available", "2025-04-20T12:30:00", "station-001");
+
+INSERT INTO sessionId_stationId (station_id) VALUES ("station-001");
