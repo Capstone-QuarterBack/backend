@@ -10,5 +10,4 @@ import lombok.*;
 public class BootCustomData {
     private String vendorId;
     private String stationId;
-    private Location location;
 }

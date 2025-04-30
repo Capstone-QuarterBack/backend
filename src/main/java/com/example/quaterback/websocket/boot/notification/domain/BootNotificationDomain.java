@@ -25,17 +25,4 @@ public class BootNotificationDomain {
     public String extractVendorId() {
         return customData.getVendorId();
     }
-
-    public Double extractLatitude() {
-        return customData.getLocation().getLatitude();
-    }
-
-    public Double extractLongitude() {
-        return customData.getLocation().getLongitude();
-    }
-
-    public String extractAddress() {
-        return customData.getLocation().getAddress();
-    }
-
 }

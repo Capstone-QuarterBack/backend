@@ -3,7 +3,6 @@ package com.example.quaterback.websocket.status.notification.converter;
 import com.example.quaterback.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.status.notification.domain.StatusNotificationDomain;
-import com.example.quaterback.websocket.status.notification.domain.sub.StatusCustomData;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
@@ -24,9 +23,6 @@ public class StatusNotificationConverter {
                 .timeStamp(LocalDateTime.parse(payload.path("timestamp").asText()))
                 .evseId(payload.path("evseId").asInt())
                 .connectorId(payload.path("connectorId").asInt())
-                .customData(new StatusCustomData(
-                        payload.path("customData").path("vendorId").asText(),
-                        payload.path("customData").path("stationId").asText()))
                 .build();
     }
 }
