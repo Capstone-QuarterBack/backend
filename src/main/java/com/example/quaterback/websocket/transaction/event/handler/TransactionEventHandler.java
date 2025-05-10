@@ -3,9 +3,11 @@ package com.example.quaterback.websocket.transaction.event.handler;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
+import com.example.quaterback.websocket.RefreshTimeoutService;
 import com.example.quaterback.websocket.transaction.event.service.TransactionEventService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ public class TransactionEventHandler implements OcppMessageHandler {
 
     private final TransactionEventService transactionEventService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RefreshTimeoutService refreshTimeoutService;
 
     @Override
     public String getAction() {
@@ -34,7 +37,8 @@ public class TransactionEventHandler implements OcppMessageHandler {
         JsonNode payload = MessageUtil.getPayload(jsonNode);
         String eventType = payload.path("eventType").asText();
         log.info(eventType);
-
+        String sessionId = session.getId();
+        refreshTimeoutService.refreshTimeout(sessionId);
         String tx_id;
         switch (eventType) {
             case "Started":
@@ -54,26 +58,21 @@ public class TransactionEventHandler implements OcppMessageHandler {
                 // 무시
                 break;
         }
-    }
+        // 응답 메시지 생성
+        ObjectMapper mapper = this.objectMapper;
+        ArrayNode response = mapper.createArrayNode();
+        response.add(3);  // MessageTypeId for CALL_RESULT
+        response.add(messageId);  // 요청에서 가져온 messageId
+        // payload 생성
+        ObjectNode payloadNode = mapper.createObjectNode();
+        response.add(payloadNode);
 
-    //이거는 반환 메세지 정의 추후 리펙터링 예정
-    private void sendTransactionEventStarted(WebSocketSession session, String messageId) throws IOException {
-        ObjectNode response = objectMapper.createObjectNode();
-        response.put("messageId", messageId);
-        response.put("messageType", "CallResult");
-
-        ObjectNode payload = objectMapper.createObjectNode();
-        payload.put("currentTime", Instant.now().toString());
-        payload.put("status", "Accepted");
-        payload.put("interval", 300);
-
-        response.set("payload", payload);
-
-        String jsonResponse = objectMapper.writeValueAsString(response);
-
-        log.info("Sending TransactionEvent Started Response to {}: {}",
-                session.getUri(), jsonResponse);
-
-        session.sendMessage(new TextMessage(jsonResponse));
+        // 메시지 전송
+        try {
+            session.sendMessage(new TextMessage(response.toString()));
+            log.info("Sent BootNotificationResponse: {}", response);
+        } catch (IOException e) {
+            log.error("Error sending BootNotificationResponse", e);
+        }
     }
 }
