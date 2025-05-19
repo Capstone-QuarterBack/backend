@@ -1,6 +1,7 @@
 package com.example.quaterback.websocket.meter.value.handler;
 
 import com.example.quaterback.common.annotation.Handler;
+import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
 import com.example.quaterback.websocket.RefreshTimeoutService;
@@ -20,6 +21,7 @@ public class MeterValuesHandler implements OcppMessageHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RefreshTimeoutService refreshTimeoutService;
     private final MeterValuesService meterValueService;
+    private final RedisMapSessionToStationService redisMapSessionToStationService;
     @Override
     public String getAction() {
         return "MeterValues";
@@ -35,7 +37,7 @@ public class MeterValuesHandler implements OcppMessageHandler {
 
         String sessionId = session.getId();
         refreshTimeoutService.refreshTimeout(sessionId);
-        String stationId = meterValueService.updateStationEss(jsonNode, sessionId);
+        String stationId = redisMapSessionToStationService.getStationId(sessionId);
         // 응답 메시지 생성
         ObjectMapper mapper = this.objectMapper;
         ArrayNode response = mapper.createArrayNode();
