@@ -5,7 +5,6 @@ import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.chargerUptime.entity.ChargerUptimeEntity;
-import com.example.quaterback.api.domain.chargerUptime.repository.ChargerInfoRepository;
 import com.example.quaterback.api.domain.chargerUptime.repository.SpringDataJpaChargerInfoRepository;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;

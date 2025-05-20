@@ -197,8 +197,8 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     }
 
     @Override
-    public List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month) {
-        List<Object[]> resultsList = springDataJpaTxInfoRepository.countChargingSpeedByMonth(year, month);
+    public List<StatisticsData.ChartData> countChargingSpeedByMonth() {
+        List<Object[]> resultsList = springDataJpaTxInfoRepository.countChargingSpeedByMonth();
         Object[] results = resultsList.get(0);
         double rapid = ((Number) results[0]).doubleValue();
         double slow = ((Number) results[1]).doubleValue();
@@ -236,7 +236,7 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         List<StationTotalPriceDto> list = springDataJpaTxInfoRepository.findTotalPriceGroupedByStationId();
         return list.stream()
                 .map(dto -> StatisticsData.ChartData.builder()
-                        .label(dto.getStationId())
+                        .label(dto.getStationName())
                         .value(dto.getTotalPrice() != null ? dto.getTotalPrice() : 0.0)
                         .build())
                 .toList();

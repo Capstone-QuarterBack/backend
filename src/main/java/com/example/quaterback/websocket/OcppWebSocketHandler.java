@@ -99,7 +99,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
             for (WebSocketSession client : reactWebSocketHandler.getSessions()) {
                 if (client.isOpen()) {
-                    client.sendMessage(message);
+                    client.sendMessage(new TextMessage(response.toString()));
                 }
             }
             log.info("WebSocket message sent to react");
@@ -121,5 +121,5 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    
+
 }
