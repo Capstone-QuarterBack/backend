@@ -65,7 +65,7 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     JOIN ChargingStationEntity cs ON t.stationId = cs.stationId
     ORDER BY t.startedTime DESC
 """)
-    List<ChargerUsageQuery> findWithStationInfo();
+    Page<ChargerUsageQuery> findWithStationInfo(Pageable pageable);
 
     @Query("""
     SELECT new com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery(

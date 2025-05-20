@@ -9,6 +9,7 @@ import com.example.quaterback.common.annotation.Facade;
 import com.example.quaterback.websocket.transaction.event.service.TransactionEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class DashboardFacade {
         return transactionEventService.getDailySummary();
     }
 
-    public List<ChargerUsageResponse> getChargerUsage() {
-        return transactionEventService.getChargerUsage();
+    public ChargerUsagePageResponse getChargerUsage(Pageable pageable) {
+        return transactionEventService.getChargerUsage(pageable);
     }
 
     public List<StationFullInfoResponse> getStations() {

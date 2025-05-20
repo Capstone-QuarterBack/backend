@@ -71,8 +71,8 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     }
 
     @Override
-    public List<ChargerUsageQuery> findWithStationInfo() {
-        return springDataJpaTxInfoRepository.findWithStationInfo();
+    public Page<ChargerUsageQuery> findWithStationInfo(Pageable pageable) {
+        return springDataJpaTxInfoRepository.findWithStationInfo(pageable);
     }
 
     @Override
