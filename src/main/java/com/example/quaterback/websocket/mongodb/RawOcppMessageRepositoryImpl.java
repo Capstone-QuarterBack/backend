@@ -61,7 +61,7 @@ public class RawOcppMessageRepositoryImpl implements RawOcppMessageRepositoryCus
             String action = rawOcppMessage.getAction();
 
             dtoList.add(new OcppLogResponse(
-                    rawOcppMessage.getTimestamp(),
+                    rawOcppMessage.getTimestamp().plusHours(9),
                     rawOcppMessage.getStationId(),
                     messageType,
                     action,
