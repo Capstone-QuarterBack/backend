@@ -65,7 +65,7 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     JOIN ChargingStationEntity cs ON t.stationId = cs.stationId
     ORDER BY t.startedTime DESC
 """)
-    List<ChargerUsageQuery> findWithStationInfo();
+    Page<ChargerUsageQuery> findWithStationInfo(Pageable pageable);
 
     @Query("""
     SELECT new com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery(
@@ -147,6 +147,16 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     """)
     List<TransactionInfoEntity> findNotEndedTxInfos(String stationId);
 
+    @Query("""
+    SELECT t FROM TransactionInfoEntity t
+    WHERE t.endedTime BETWEEN :startTime AND :endTime
+""")
+    List<TransactionInfoEntity> findByEndedTimeBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
+
+
     @Query(value = """
     SELECT
         COALESCE(SUM(t.total_meter_value), 0) AS totalChargingVolume,
@@ -186,9 +196,8 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         SUM(CASE WHEN TIMESTAMPDIFF(SECOND, t.started_time, t.ended_time) < 20 THEN 1 ELSE 0 END) AS rapidCount,
         SUM(CASE WHEN TIMESTAMPDIFF(SECOND, t.started_time, t.ended_time) >= 20 THEN 1 ELSE 0 END) AS slowCount
     FROM tx_info t
-    WHERE MONTH(t.started_time) = :month AND YEAR(t.started_time) = :year
     """, nativeQuery = true)
-    List<Object[]> countChargingSpeedByMonth(@Param("year") int year, @Param("month") int month);
+    List<Object[]> countChargingSpeedByMonth();
 
     @Query(value = """
     SELECT 
@@ -201,9 +210,12 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     """, nativeQuery = true)
     List<Object[]> findDailyTxCount();
 
-    @Query("SELECT t.stationId AS stationId, SUM(t.totalPrice) AS totalPrice " +
-            "FROM TransactionInfoEntity t " +
-            "GROUP BY t.stationId")
+    @Query("""
+    SELECT s.stationName AS stationName, SUM(t.totalPrice) AS totalPrice
+    FROM TransactionInfoEntity t
+    JOIN ChargingStationEntity s on t.stationId = s.stationId
+    GROUP BY s.stationName
+    """)
     List<StationTotalPriceDto> findTotalPriceGroupedByStationId();
 
     @Query(value = """

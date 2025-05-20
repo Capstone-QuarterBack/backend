@@ -1,6 +1,6 @@
 package com.example.quaterback.api.feature.statistics.dto.query;
 
 public interface StationTotalPriceDto {
-    String getStationId();
+    String getStationName();
     Double getTotalPrice();
 }

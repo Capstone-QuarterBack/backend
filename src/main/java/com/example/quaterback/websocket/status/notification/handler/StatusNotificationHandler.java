@@ -40,7 +40,7 @@ public class StatusNotificationHandler implements OcppMessageHandler {
         refreshTimeoutService.refreshTimeout(sessionId);
 
         Integer resultEvseId = statusNotificationService.chargerStatusUpdated(jsonNode, session.getId());
-        log.info("updated {}", resultEvseId);
+        log.info("Status updated {}", resultEvseId);
         // 응답 메시지 생성
         ObjectMapper mapper = this.objectMapper;
         ArrayNode response = mapper.createArrayNode();

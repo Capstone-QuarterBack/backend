@@ -6,7 +6,8 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record ChargerUsageResponse(
+public record
+ChargerUsageResponse(
         LocalDateTime timestamp,
         String chargerLocation,
         String chargerNumber,

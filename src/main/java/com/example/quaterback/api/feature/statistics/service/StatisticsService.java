@@ -1,6 +1,7 @@
 package com.example.quaterback.api.feature.statistics.service;
 
 import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
+import com.example.quaterback.api.domain.chargerUptime.repository.ChargerInfoRepository;
 import com.example.quaterback.api.domain.price.repository.PriceRepository;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
 import com.example.quaterback.api.feature.statistics.converter.StatisticsConverter;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -22,6 +24,8 @@ public class StatisticsService {
     private final TxInfoRepository txInfoRepository;
     private final ChargerRepository chargerRepository;
     private final PriceRepository priceRepository;
+    private final ChargerInfoRepository ChargerInfoRepository;
+    ;
 
     private final StatisticsConverter converter;
 
@@ -82,7 +86,7 @@ public class StatisticsService {
     }
 
     public StatisticsData getChargingInfoStatistics(ChartType chartType) {
-        List<StatisticsData.ChartData> results = txInfoRepository.countChargingSpeedByMonth(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+        List<StatisticsData.ChartData> results = txInfoRepository.countChargingSpeedByMonth();
         return converter.toStatisticsData(results, chartType);
     }
 
@@ -92,13 +96,16 @@ public class StatisticsService {
     }
 
     public StatisticsData getPowerTradingStatistics(ChartType chartType) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         List<StatisticsData.ChartData> results = priceRepository.findDailyCsPrice7DayRaw()
                 .stream().map(price -> StatisticsData.ChartData.builder()
-                        .label(price.getUpdatedDateTime().toString())
+                        .label(price.getUpdatedDateTime().format(formatter))  // 여기 수정
                         .value(price.getPricePerMwh())
                         .build()
                 ).toList();
-        return converter.toStatisticsData(results, chartType);
+
+        return converter.toStatisticsData2(results, chartType);
     }
 
     public StatisticsData getTransactionCountStatistics(ChartType chartType) {
@@ -114,5 +121,10 @@ public class StatisticsService {
     public StatisticsData getMeterValueGroupedByTimeType(ChartType chartType) {
         List<StatisticsData.ChartData> results = txInfoRepository.findMeterValueGroupedByTimeType();
         return converter.toStatisticsData(results, chartType);
+    }
+
+    public StatisticsData getOperatingRate(ChartType chartType) {
+        List<StatisticsData.ChartData> results = ChargerInfoRepository.findOperatingRate();
+        return converter.toStatisticsData(results,chartType);
     }
 }

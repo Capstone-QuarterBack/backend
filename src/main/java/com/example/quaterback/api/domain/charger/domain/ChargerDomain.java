@@ -18,7 +18,7 @@ public class ChargerDomain {
     private ChargerStatus chargerStatus;
     private LocalDateTime updateStatusTimeStamp;
     private String stationId;
-
+    private Integer troubleCnt;
     public void updateChargerStatus(ChargerStatus status) {
         if (!chargerStatus.equals(status)) {
             this.chargerStatus = status;
@@ -26,6 +26,12 @@ public class ChargerDomain {
         }
     }
 
+    public void addTrouble(){
+        if(this.troubleCnt == null){
+            troubleCnt = 1;
+        }
+        troubleCnt += 1;
+    }
     public static ChargerDomain fromEntityToDomain(ChargerEntity entity){
         return ChargerDomain.builder()
                 .id(entity.getId())

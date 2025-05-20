@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface RawOcppMessageRepositoryCustom {
     OcppLogSearchResult findByFilters(OcppLogFilterRequest request, Pageable pageable);
+    String findByMessageId(String messageId);
 }

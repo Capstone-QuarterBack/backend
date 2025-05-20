@@ -16,6 +16,8 @@ public interface ChargerRepository {
     List<ChargerDomain> findAllByStationId(String stationId);
     List<ChargerDomain> findByStationID(String stationId);
     void save(ChargerDomain chargerDomain);
+    List<ChargerEntity> findAllCharger();
+    void updateTroubleAndStatus(ChargerDomain domain);
     List<StatisticsData.ChartData> countFaultAndNormalChargers();
 
     ChargerDomain updateChargerStatus(String stationId, Integer evseId, ChargerStatus status);

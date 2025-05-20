@@ -63,6 +63,20 @@ public class JpaChargerRepository implements ChargerRepository {
     }
 
     @Override
+    public List<ChargerEntity> findAllCharger() {
+        return chargerRepository.findAll();
+    }
+
+    @Override
+    public void updateTroubleAndStatus(ChargerDomain domain) {
+        ChargerEntity entity = chargerRepository.findByStation_StationIdAndEvseId(domain.getStationId(), domain.getEvseId())
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        entity.updateChargerStatus(domain.getChargerStatus());
+        entity.addTrouble();
+    }
+
+    @Override
     public List<ChargerDomain> findAllByStationId(String stationId) {
         List<ChargerEntity> entityList = chargerRepository.findAllByStationId(stationId);
 

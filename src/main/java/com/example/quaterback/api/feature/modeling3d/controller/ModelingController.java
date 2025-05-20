@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/modeling")
@@ -41,7 +43,7 @@ public class ModelingController {
             @PathVariable(name="stationId") String stationId,
             @PathVariable(name="evseId")Integer evseId,
             @PathVariable(name="status") ChargerStatus status
-    ) {
+    ) throws IOException {
         UpdateChargerStatusResponse updateResponse = modelingService.updateCharger(stationId, evseId, status);
         return ResponseEntity
                 .status(HttpStatus.OK)

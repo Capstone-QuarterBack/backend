@@ -1,6 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
 import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
@@ -14,6 +15,7 @@ import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQue
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TxInfoRepository {
@@ -37,7 +39,7 @@ public interface TxInfoRepository {
 
     DashboardSummaryQuery findDashboardSummary();
 
-    List<ChargerUsageQuery> findWithStationInfo();
+    Page<ChargerUsageQuery> findWithStationInfo(Pageable pageable);
 
     Page<ChargingRecordQuery> findChargerUsageByStationId(String stationId, Pageable pageable);
 
@@ -57,7 +59,9 @@ public interface TxInfoRepository {
 
     List<StatisticsData.ChartData> findDailyUsageLast7DayRaw();
 
-    List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month);
+    List<StatisticsData.ChartData> countChargingSpeedByMonth();
+
+    List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime);
 
     List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType);
 

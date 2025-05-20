@@ -7,6 +7,7 @@ import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
 import com.example.quaterback.api.domain.txlog.repository.TxLogRepository;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
+import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsagePageResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
@@ -81,9 +82,15 @@ public class TransactionEventService {
         return converter.toDashboardSummaryResponse(query);
     }
 
-    public List<ChargerUsageResponse> getChargerUsage() {
-        List<ChargerUsageQuery> queryList = txInfoRepository.findWithStationInfo();
-        return converter.toChargerUsageResponseList(queryList);
+    public ChargerUsagePageResponse getChargerUsage(Pageable pageable) {
+        Page<ChargerUsageQuery> queryList = txInfoRepository.findWithStationInfo(pageable);
+        List<ChargerUsageResponse> usageResponses = converter.toChargerUsageResponseList(queryList.getContent());
+        return new ChargerUsagePageResponse(
+                usageResponses,
+                queryList.getNumber(),
+                queryList.getTotalElements(),
+                queryList.getTotalPages()
+        );
     }
 
     public Page<ChargingRecordQuery> findChargingEventsByStationId(String stationId, Pageable pageable) {

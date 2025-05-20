@@ -77,4 +77,18 @@ public class RawOcppMessageRepositoryImpl implements RawOcppMessageRepositoryCus
                 pageResult.getContent()
         );
     }
+
+    @Override
+    public String findByMessageId(String messageId) {
+        Query query = new Query(Criteria.where("message.1").is(messageId));
+        RawOcppMessage rawOcppMessage = mongoTemplate.findOne(query, RawOcppMessage.class);
+        if (rawOcppMessage != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode array = objectMapper.valueToTree(rawOcppMessage.getMessage());
+            return array.get(2).asText();
+        }
+        return null;
+    }
+
+
 }

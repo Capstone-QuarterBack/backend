@@ -18,10 +18,10 @@ public class ChargerUsageQuery {
     private String confirmCode;
 
     public String getUsageKwh() {
-        return usageKwh+"(kWh)";
+        return usageKwh+" (Wh)";
     }
 
     public String getPriceWon() {
-        return String.format("%2f,(KRW)",priceWon);
+        return String.format("%.2f (KRW)", priceWon);
     }
 }

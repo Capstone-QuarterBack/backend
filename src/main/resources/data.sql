@@ -4,18 +4,21 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. 기존 데이터 삭제 (삭제 순서 중요: 자식 테이블 → 부모 테이블)
 DELETE FROM tx_log;
 DELETE FROM tx_info;
-DELETE FROM charger_info WHERE station_id = 'station-001';
-DELETE FROM charging_station WHERE station_id = 'station-001';
+DELETE FROM charger_info;
+DELETE FROM charging_station;
 DELETE FROM customer;
 DELETE FROM cs_price;
 DELETE FROM kepco_price;
+DELETE FROM charger_uptime;
 
 -- 외래키 체크 복구
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 2. 새 데이터 삽입
 INSERT INTO charging_station (station_id, model, vendor_id, latitude, longitude, address, update_status_time_stamp, station_status, station_name, ess_value)
-VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 중구 세종대로 110', '2025-04-17T11:20:00', 'inactive', 'sejong', 100.0);
+VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 중구 세종대로 110', '2025-04-17T11:20:00', 'inactive', 'sejong', 100.0),
+       ('station-002', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 중구 세종대로 110', '2025-04-17T11:20:00', 'inactive', 'yangcheon', 100.0);
+;
 
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id)
 VALUES (1, 'Available', '2025-04-20T12:30:00', 'station-001'),
@@ -57,6 +60,33 @@ INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
 
 INSERT INTO tx_info (transaction_id, started_time, ended_time, vehicle_no, id_token, station_id, total_meter_value, total_price, error_code)
 VALUES
-    ('TX123456', '2025-05-15T10:00:00', '2025-05-15T10:00:10', '12가3456', 'token001', 'station-001', 15.0, 1500, '00'),
-    ('TX12123',  '2025-05-16T10:20:00', '2025-05-16T10:20:20', '12가3456', 'token001', 'station-001', 15.0, 1000, '00'),
-    ('TX789012', '2025-04-02T14:10:00', '2025-04-02T14:50:00', '34나7890', 'token001', 'station-001', 22.7, 6800, '00');
+    ('tx-000', '2025-05-15T10:00:00', '2025-05-15T10:00:10', '12가3456', 'token001', 'station-001', 15.0, 1500, '00'),
+    ('tx-001',  '2025-05-16T10:20:00', '2025-05-16T10:20:20', '12가3456', 'token001', 'station-001', 15.0, 1000, '00'),
+    ('tx-002', '2025-04-02T14:10:00', '2025-04-02T14:50:00', '34나7890', 'token001', 'station-001', 22.7, 6800, '00');
+INSERT INTO charger_uptime (up_time, charging_station, created_at)
+VALUES
+    (2.5, 1, '2025-05-01 09:00:00.000000'),
+    (3.1, 1, '2025-05-01 17:00:00.000000'),
+    (1.8, 1, '2025-05-02 08:00:00.000000'),
+    (2.2, 1, '2025-05-02 18:00:00.000000'),
+    (3.6, 1, '2025-05-03 10:00:00.000000'),
+    (4.0, 1, '2025-05-04 11:00:00.000000'),
+    (3.3, 1, '2025-05-10 14:00:00.000000'),
+    (2.7, 1, '2025-05-11 09:00:00.000000'),
+    (4.1, 1, '2025-05-12 15:00:00.000000'),
+    (3.9, 1, '2025-05-13 20:00:00.000000'),
+    (4.5, 1, '2025-05-14 13:00:00.000000'),
+    (4.8, 1, '2025-05-16 16:00:00.000000'),
+    (2.5, 2, '2025-05-01 09:00:00.000000'),
+    (3.1, 2, '2025-05-01 17:00:00.000000'),
+    (1.8, 2, '2025-05-02 08:00:00.000000'),
+    (2.2, 2, '2025-05-02 18:00:00.000000'),
+    (3.6, 2, '2025-05-03 10:00:00.000000'),
+    (4.0, 2, '2025-05-04 11:00:00.000000'),
+    (3.3, 2, '2025-05-10 14:00:00.000000'),
+    (2.7, 2, '2025-05-11 09:00:00.000000'),
+    (4.1, 2, '2025-05-12 15:00:00.000000'),
+    (3.9, 2, '2025-05-13 20:00:00.000000'),
+    (4.5, 2, '2025-05-14 13:00:00.000000'),
+    (4.8, 2, '2025-05-16 16:00:00.000000');
+;
