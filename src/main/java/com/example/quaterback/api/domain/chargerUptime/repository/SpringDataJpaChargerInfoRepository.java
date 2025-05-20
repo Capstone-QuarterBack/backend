@@ -2,6 +2,7 @@ package com.example.quaterback.api.domain.chargerUptime.repository;
 
 import com.example.quaterback.api.domain.chargerUptime.entity.ChargerUptimeEntity;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.feature.statistics.dto.query.DayOperatingDto;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,5 +29,12 @@ public interface SpringDataJpaChargerInfoRepository extends JpaRepository<Charge
             @Param("dayEnd")   LocalDateTime dayEnd
     );
 
+    @Query("""
+    SELECT DATE(cu.createdAt) AS timeType, SUM(cu.upTime) AS totalUpTime
+    FROM ChargerUptimeEntity cu
+    GROUP BY DATE(cu.createdAt)
+    ORDER BY DATE(cu.createdAt)
+""")
+    List<DayOperatingDto> findOperatingRate();
 }
 

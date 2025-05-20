@@ -59,7 +59,7 @@ public interface TxInfoRepository {
 
     List<StatisticsData.ChartData> findDailyUsageLast7DayRaw();
 
-    List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month);
+    List<StatisticsData.ChartData> countChargingSpeedByMonth();
 
     List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime);
 

@@ -1,6 +1,8 @@
 package com.example.quaterback.api.domain.chargerUptime.repository;
 
 import com.example.quaterback.api.domain.chargerUptime.entity.ChargerUptimeEntity;
+import com.example.quaterback.api.feature.statistics.dto.query.DayOperatingDto;
+import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +19,16 @@ public class JpaChargerInfoRepository implements ChargerInfoRepository{
                 start, end);
 
         return chargerInfoEntities;
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findOperatingRate() {
+        List<DayOperatingDto> list = chargerInfoRepository.findOperatingRate();
+        return list.stream()
+                .map(dto -> StatisticsData.ChartData.builder()
+                        .label(dto.getTimeType())
+                        .value(dto.getTotalUpTime())
+                        .build())
+                .toList();
     }
 }

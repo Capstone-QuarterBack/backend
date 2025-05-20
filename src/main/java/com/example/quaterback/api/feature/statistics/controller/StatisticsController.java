@@ -146,4 +146,12 @@ public class StatisticsController {
     public StatisticsData getStationsPriceStatistics(@RequestParam(name = "chartType") ChartType chartType) {
         return statisticsService.getTotalPriceGroupedByStationId(chartType);
     }
+
+    @GetMapping("/stations-operating-rate")
+    public StatisticsData getStationsOperatingRateStatistics(
+            @RequestParam(name = "chartType") ChartType chartType,
+            @RequestParam String timeRange) {
+        return statisticsService.getOperatingRate(chartType);
+    }
+
 }

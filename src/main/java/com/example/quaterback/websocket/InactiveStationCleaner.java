@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @EnableScheduling
-
 public class InactiveStationCleaner {
 
     private final InactiveStationService inactiveStationService;
