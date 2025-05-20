@@ -39,6 +39,7 @@ public class ChargerEntity {
 
     public ChargerDomain toDomain() {
         return ChargerDomain.builder()
+                .id(id)
                 .stationId(station.getStationId())
                 .evseId(evseId)
                 .chargerStatus(chargerStatus)

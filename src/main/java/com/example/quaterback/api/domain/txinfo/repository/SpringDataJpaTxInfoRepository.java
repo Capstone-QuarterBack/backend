@@ -229,4 +229,7 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         GROUP BY timeType
         """, nativeQuery = true)
     List<DayNightMeterValueDto> findMeterValueGroupedByTimeType();
+
+    TransactionInfoEntity findTop1ByEvseId_IdOrderByStartedTimeDesc(Long chargerPk);
+
 }
