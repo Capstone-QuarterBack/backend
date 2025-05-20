@@ -2,6 +2,7 @@ package com.example.quaterback.api.feature.monitoring.controller;
 
 import com.example.quaterback.api.feature.monitoring.dto.response.*;
 import com.example.quaterback.api.feature.monitoring.facade.StationMonitoringFacade;
+import com.example.quaterback.websocket.transaction.event.service.TransactionEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.util.List;
 public class StationMonitoringController {
 
     private final StationMonitoringFacade stationMonitoringFacade;
+    private final TransactionEventService transactionEventService;
 
     @GetMapping("/charging-history/{stationId}")
     public ChargingRecordResponsePage getChargingHistoryPaged(
@@ -73,5 +75,14 @@ public class StationMonitoringController {
     @GetMapping("/ess-value/{stationId}")
     public EssValueResponse getEssValue(@PathVariable(name = "stationId") String stationId) {
         return stationMonitoringFacade.getEssValue(stationId);
+    }
+
+    @GetMapping("/live-streaming/{evseId}/{stationId}")
+    public List<TimeAndValueDto> getLive(
+            @PathVariable(name = "evseId") Integer evseId,
+            @PathVariable(name = "stationId") String stationId
+    ){
+         return transactionEventService.getLiveInfo(evseId,stationId);
+
     }
 }

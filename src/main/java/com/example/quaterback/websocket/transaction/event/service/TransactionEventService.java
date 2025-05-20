@@ -1,9 +1,16 @@
 package com.example.quaterback.websocket.transaction.event.service;
 
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
+import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
+import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.domain.txinfo.repository.SpringDataJpaTxInfoRepository;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
 import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.entity.TransactionLogEntity;
+import com.example.quaterback.api.domain.txlog.repository.SpringDataJpaTxLogRepository;
 import com.example.quaterback.api.domain.txlog.repository.TxLogRepository;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
@@ -15,6 +22,7 @@ import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQue
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
+import com.example.quaterback.api.feature.monitoring.dto.response.TimeAndValueDto;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.transaction.event.converter.TransactionEventConverter;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
@@ -39,7 +47,9 @@ public class TransactionEventService {
     private final TxLogRepository txLogRepository;
     private final RedisMapSessionToStationService redisMappingService;
     private final TransactionInfoService transactionInfoService;
-
+    private final ChargerRepository chargerRepository;
+    private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
+    private final SpringDataJpaTxLogRepository springDataJpaTxLogRepository;
     public String saveTxInfo(JsonNode jsonNode, String sessionId) {
         TransactionEventDomain txEventDomain = converter.convertToStartedTransactionDomain(jsonNode);
 
@@ -108,5 +118,18 @@ public class TransactionEventService {
 
     public DailyUsageQuery findOneDayUsageInfo(String stationId, Integer evseId, LocalDate date) {
         return txInfoRepository.findDailyUsageByEvseIdAndDate( stationId, evseId, date);
+    }
+
+
+    public List<TimeAndValueDto> getLiveInfo (Integer evseId, String stationId) {
+        log.info("1");
+        ChargerDomain chargerDomain =  chargerRepository.findByStationIdAndEvseId(stationId, evseId);
+        log.info(chargerDomain.getId().toString());
+        TransactionInfoEntity transactionInfoEntity = springDataJpaTxInfoRepository.findTop1ByEvseId_IdOrderByStartedTimeDesc(chargerDomain.getId());
+        log.info("3");
+        List<TransactionLogEntity> txEntities = springDataJpaTxLogRepository.findByTransactionIdOrderByTimestampAsc(transactionInfoEntity.getTransactionId());
+        log.info("4");
+        return txEntities.stream()
+                .map(TimeAndValueDto::from).toList();
     }
 }
