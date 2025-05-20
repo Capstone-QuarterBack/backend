@@ -34,6 +34,7 @@ public class ChargingStationDomain {
     }
 
     public void updateStationEssValue(Double essValue){
+        essValue = Math.round(essValue * 100.0) / 100.0;
         this.essValue = essValue;
     }
 
