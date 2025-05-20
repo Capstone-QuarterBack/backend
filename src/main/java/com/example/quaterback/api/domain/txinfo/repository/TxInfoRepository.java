@@ -39,7 +39,7 @@ public interface TxInfoRepository {
 
     DashboardSummaryQuery findDashboardSummary();
 
-    List<ChargerUsageQuery> findWithStationInfo();
+    Page<ChargerUsageQuery> findWithStationInfo(Pageable pageable);
 
     Page<ChargingRecordQuery> findChargerUsageByStationId(String stationId, Pageable pageable);
 

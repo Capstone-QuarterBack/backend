@@ -6,6 +6,8 @@ import com.example.quaterback.api.feature.dashboard.dto.response.*;
 import com.example.quaterback.api.feature.dashboard.facade.DashboardFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +32,12 @@ public class DashboardController {
     }
 
     @GetMapping("/chargers/usage")
-    public List<ChargerUsageResponse> getChargerUsage() {
-        return dashboardFacade.getChargerUsage();
+    public ChargerUsagePageResponse getChargerUsage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return dashboardFacade.getChargerUsage(pageable);
     }
 
     @GetMapping("/electricity-price/cs-price")
