@@ -105,7 +105,7 @@ public class TransactionEventConverter {
                 Math.round(query.getTotalProfit() * 100) / 100.0,
                 Math.round(query.getTotalDischarge() * 100) / 100.0
         );
-        return DashboardSummaryResponse.from(query);
+        return DashboardSummaryResponse.from(round);
     }
 
     public List<ChargerUsageResponse> toChargerUsageResponseList(List<ChargerUsageQuery> queryList) {
