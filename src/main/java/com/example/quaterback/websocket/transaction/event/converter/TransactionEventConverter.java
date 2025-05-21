@@ -100,6 +100,11 @@ public class TransactionEventConverter {
     }
 
     public DashboardSummaryResponse toDashboardSummaryResponse(DashboardSummaryQuery query){
+        DashboardSummaryQuery round = new DashboardSummaryQuery(
+                query.getUsage(),
+                Math.round(query.getTotalProfit() * 100) / 100.0,
+                Math.round(query.getTotalDischarge() * 100) / 100.0
+        );
         return DashboardSummaryResponse.from(query);
     }
 
