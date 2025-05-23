@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 @RequestMapping("/api/statistics")
 @RestController
@@ -57,7 +58,7 @@ public class StatisticsController {
     @GetMapping("/power-trading-revenue")
     public ResponseEntity<ApiResponse<PowerTradingRevenueData>> getPowerTradingRevenueData(){
         LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
-        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
         PowerTradingRevenueData c = statisticService.getPowerTradingData(startTime, endTime);
         return ResponseEntity.ok(new ApiResponse<>("success", c));
@@ -66,7 +67,7 @@ public class StatisticsController {
     @GetMapping("/power-trading-volume")
     public ResponseEntity<ApiResponse<PowerTradingVolumeData>> getPowerTradingVolumeData(){
         LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
-        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
         PowerTradingVolumeData c = statisticService.getPowerVolumeData(startTime, endTime);
         return ResponseEntity.ok(new ApiResponse<>("success", c));
