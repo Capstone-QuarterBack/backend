@@ -173,7 +173,6 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
                 DATE(t.ended_time) AS `date`,
                 SUM(t.total_price) AS dailyRevenue
             FROM tx_info t
-            WHERE t.ended_time < NOW()
             GROUP BY DATE(t.ended_time)
             ORDER BY DATE(t.ended_time)
             """, nativeQuery = true)
@@ -184,7 +183,6 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         DATE(t.ended_time) AS `date`,
         SUM(t.total_meter_value) AS dailyUsage
     FROM tx_info t
-    WHERE t.ended_time < NOW()
     GROUP BY DATE(t.ended_time)
     ORDER BY DATE(t.ended_time)
     """, nativeQuery = true)
@@ -204,7 +202,6 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         DATE(ended_time) AS date,
         COUNT(*) AS tx_count
     FROM tx_info
-    WHERE ended_time < NOW()
     GROUP BY DATE(ended_time)
     ORDER BY DATE(ended_time) DESC
     """, nativeQuery = true)
