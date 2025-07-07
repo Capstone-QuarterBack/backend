@@ -71,6 +71,7 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
     @Override
     public List<ChargingStationDomain> findAll() {
         List<ChargingStationEntity> stationEntitys = chargingStationRepository.findAll();
+        //List<ChargingStationEntity> stationEntitys = chargingStationRepository.findAllWithFetchJoin();
 
         return stationEntitys.stream()
                 .map(ChargingStationEntity::toDomain)
