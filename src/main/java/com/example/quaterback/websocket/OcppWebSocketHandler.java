@@ -120,6 +120,4 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         redisMappingService.removeMapping(session.getId());
         sessions.remove(session);
     }
-
-
 }
