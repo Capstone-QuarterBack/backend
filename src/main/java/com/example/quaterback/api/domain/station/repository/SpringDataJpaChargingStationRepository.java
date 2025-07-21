@@ -57,4 +57,7 @@ public interface SpringDataJpaChargingStationRepository extends JpaRepository<Ch
     @Query("delete from ChargingStationEntity cs where cs.stationName = :stationName")
     int deleteByName(@Param("stationName")String stationName);
 
+    @Query("select t from ChargingStationEntity t join fetch t.chargerEntityList")
+    List<ChargingStationEntity> findAllWithFetchJoin();
+
 }
